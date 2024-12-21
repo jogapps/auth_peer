@@ -4,7 +4,7 @@ const ApiError = require('./ApiError');
 const ApiResponder = (res, statusCode, message, payload, extra = {}) => {
   res.status(statusCode).send({
     status: statusCode,
-    success: statusCode === httpStatus.HTTP_STATUS_OK || statusCode === httpStatus.HTTP_STATUS_CREATED,
+    success: statusCode === httpStatus.OK || statusCode === httpStatus.CREATED,
     message,
     data: payload,
     ...extra,
@@ -12,10 +12,10 @@ const ApiResponder = (res, statusCode, message, payload, extra = {}) => {
 };
 
 const successResponse = (res, payload = {}, message = 'Success') => {
-  return ApiResponder(res, httpStatus.HTTP_STATUS_OK, message, payload);
+  return ApiResponder(res, httpStatus.OK, message, payload);
 };
 
-const errorResponse = (res, message = null, statusCode = httpStatus.HTTP_STATUS_INTERNAL_SERVER_ERROR, extra = {}) => {
+const errorResponse = (res, message = null, statusCode = httpStatus.INTERNAL_SERVER_ERROR, extra = {}) => {
   const httpMessage = message || httpStatus[statusCode];
   return ApiResponder(res, statusCode, httpMessage, {}, extra);
 };

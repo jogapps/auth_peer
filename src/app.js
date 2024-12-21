@@ -10,7 +10,7 @@ const httpStatus = require('http-status');
 const app = express();
 
 // local imports
-const routes = require('./api/routes/index');
+const routes = require('./api/routes');
 const ApiError = require('./api/utils/requests/ApiError');
 const { errorConverter, errorHandler } = require('./api/middlewares/error');
 
@@ -34,7 +34,7 @@ app.use("/api/v1", routes);
 // catch 404 errors and print requested route
 app.use((req, res, next) => {
   console.log(`${moment()}: ${req.originalUrl}`);
-  throw new ApiError(httpStatus.HTTP_STATUS_NOT_FOUND, 'Not found');
+  throw new ApiError(httpStatus.NOT_FOUND, 'Not found');
 });
 
 // convert error to ApiError, if needed

@@ -8,7 +8,7 @@ const resolve = async (fetchFn, external = false) => {
         res = await fetchFn();
     } catch (e) {
         console.error(e);
-        throw new ApiError(httpStatus.HTTP_STATUS_FAILED_DEPENDENCY, 'Unable to connect to service');
+        throw new ApiError(httpStatus.FAILED_DEPENDENCY, 'Unable to connect to service');
     }
 
     if (res) {
@@ -29,8 +29,8 @@ const resolve = async (fetchFn, external = false) => {
         console.error('Error Data', data);
 
         // Avoid returning 401 errors, convert to 424
-        if (res.status === httpStatus.HTTP_STATUS_UNAUTHORIZED) {
-            throw new ApiError(httpStatus.HTTP_STATUS_FAILED_DEPENDENCY, data.message || `Connection rejected: unauthorized`);
+        if (res.status === httpStatus.UNAUTHORIZED) {
+            throw new ApiError(httpStatus.FAILED_DEPENDENCY, data.message || `Connection rejected: unauthorized`);
         }
 
         // 5XX errors
@@ -41,7 +41,7 @@ const resolve = async (fetchFn, external = false) => {
         throw new ApiError(res.status, data.message || data.reason);
     } else {
         // No response at all
-        throw new ApiError(httpStatus.HTTP_STATUS_FAILED_DEPENDENCY, 'No response from service');
+        throw new ApiError(httpStatus.FAILED_DEPENDENCY, 'No response from service');
     }
 };
 

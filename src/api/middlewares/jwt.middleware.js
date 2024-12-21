@@ -7,7 +7,7 @@ let validateToken = (req, res, next) => {
     let token = req.headers["authorization"];
 
     if (!token || !token.startsWith('Bearer ')) {
-        throw new ApiError(httpStatus.HTTP_STATUS_UNAUTHORIZED, "Token is required");
+        throw new ApiError(httpStatus.UNAUTHORIZED, "Token is required");
     }
 
     // Extract the actual token without "Bearer "
@@ -15,13 +15,13 @@ let validateToken = (req, res, next) => {
 
     if (token) {
         JWT.verify(tokenWithoutBearer, jwtUtils.secret, (error, data) => {
-            if (error) throw new ApiError(httpStatus.HTTP_STATUS_UNAUTHORIZED, "Invalid token found");
+            if (error) throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid token found");
             else {
                 req.data = data;
                 next();
             }
         });
-    } else throw new ApiError(httpStatus.HTTP_STATUS_UNAUTHORIZED, "Token is required");
+    } else throw new ApiError(httpStatus.UNAUTHORIZED, "Token is required");
 }
 
 module.exports = {

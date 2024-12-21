@@ -11,7 +11,7 @@ const validateReq = (schema) => (req, res, next) => {
 
   if (error) {
     const errorMessage = error.details.map((details) => details.message).join(', ');
-    return next(new ApiError(httpStatus.HTTP_STATUS_BAD_REQUEST, errorMessage));
+    return next(new ApiError(httpStatus.BAD_REQUEST, errorMessage));
   }
   Object.assign(req, value);
   return next();
@@ -29,7 +29,7 @@ const validate = (schema, data) => {
 
   if (error) {
     const errorMessage = error.details.map((details) => details.message).join(', ');
-    throw new ApiError(httpStatus.HTTP_STATUS_BAD_REQUEST, errorMessage);
+    throw new ApiError(httpStatus.BAD_REQUEST, errorMessage);
   }
 
   return value;
