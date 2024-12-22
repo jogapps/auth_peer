@@ -43,7 +43,26 @@ const loginUser = async (req) => {
     };
 };
 
+const updatePassword = async (req) => {
+    const {oldPassword, password} = req.body;
+    const {email} = req.data;
+    const user = await cacheService.getOrUpdate(userCacheKey(email), async () => await User.findOne({
+        where: {email},
+        raw: true
+    }));
+    abortUnless(user, httpStatus.BAD_REQUEST, 'Wrong credentials');
+    const rightPassword = bcrypt.compareSync(oldPassword, user.password);
+    abortUnless(rightPassword, httpStatus.BAD_REQUEST, 'Wrong credentials');
+    let newPassword = bcrypt.hashSync(password, 10);
+    const resetPassword = await User.update({password: newPassword}, {where: {email}});
+    abortUnless(resetPassword, httpStatus.INTERNAL_SERVER_ERROR, serverError);
+    user.password = newPassword;
+    await cacheService.set(userCacheKey(email), user);
+    return resetPassword;
+}
+
 module.exports = {
     register,
     loginUser,
+    updatePassword,
 }

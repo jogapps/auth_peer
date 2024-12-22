@@ -110,6 +110,39 @@ const set = async (key, data) => {
     }
 };
 
+const remove = async (key) => {
+    if (!key) {
+        console.warn('No key provided to delete cache');
+        return false;
+    }
+
+    const topic = sanitizeTopicName(key);
+
+    try {
+        await ensureTopicExists(topic);
+
+        const kafkaProducer = await loadProducer();
+
+        // Produce a tombstone message (key with a null value)
+        await kafkaProducer.send({
+            topic,
+            messages: [
+                {
+                    key,
+                    value: null,
+                },
+            ],
+        });
+
+        console.log(`Tombstone message sent to topic: ${topic} for key: ${key}`);
+        return true;
+    } catch (error) {
+        console.error(`Error sending tombstone message for key: ${key}`, error);
+        return false;
+    }
+};
+
+
 const getOrUpdate = async (key, callable) => {
     let data = await get(key);
 
@@ -139,11 +172,12 @@ const isConnected = () => {
 };
 
 module.exports = {
+    get,
+    set,
+    remove,
+    isConnected,
+    getOrUpdate,
     loadProducer,
     loadConsumer,
     destroyClient,
-    isConnected,
-    get,
-    set,
-    getOrUpdate,
 };

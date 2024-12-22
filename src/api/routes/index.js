@@ -6,6 +6,7 @@ const router = express.Router();
 
 // routes
 const authRoute = require('./auth.route');
+const friendRoute = require('./friend.route');
 
 const apiVersion = '1.0.0';
 
@@ -16,6 +17,7 @@ router.use((req, res, next) => {
 });
 
 router.use('/auth', authRoute);
+router.use('/friends', friendRoute);
 
 router.get("/", (req, res) => {
     res.status(200).json({

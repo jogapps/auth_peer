@@ -19,7 +19,15 @@ const register_user = {
   }),
 };
 
+const password_update = {
+  body: Joi.object().keys({
+    oldPassword: Joi.string().required(),
+    password: Joi.string().min(6).required(),
+  }),
+};
+
 module.exports = {
   login,
   register_user,
+  password_update,
 };

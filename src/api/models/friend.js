@@ -2,72 +2,51 @@
 const {
   Model
 } = require('sequelize');
+const {REQUEST_STATUS} = require("../utils/texts");
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class Friend extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
-      User.hasMany(models.Friend, {
+      Friend.belongsTo(models.User, {
         foreignKey: "user_id",
         as: "user"
       });
-      User.hasMany(models.Friend, {
+      Friend.belongsTo(models.User, {
         foreignKey: "friend_id",
         as: "friend"
       });
     }
   }
-  User.init({
+  Friend.init({
     id: {
       allowNull: false,
       primaryKey: true,
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV1,
     },
-    username: {
-      type: DataTypes.STRING,
+    user_id: {
+      allowNull: false,
+      type: DataTypes.UUID
     },
-    name: {
+    friend_id: {
+      allowNull: false,
+      type: DataTypes.UUID
+    },
+    status: {
       allowNull: false,
       type: DataTypes.STRING,
-    },
-    email: {
-      allowNull: false,
-      type: DataTypes.STRING,
-      unique: true,
-    },
-    phone: {
-      type: DataTypes.STRING,
-    },
-    password: {
-      allowNull: false,
-      type: DataTypes.STRING,
-    },
-    role: {
-      allowNull: false,
-      type: DataTypes.STRING,
-    },
-    profile_image: {
-      type: DataTypes.TEXT,
-    },
-    authenticated: {
-      allowNull: false,
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-    last_login: {
-      type: DataTypes.DATE,
+      defaultValue: REQUEST_STATUS[0]
     },
   }, {
     sequelize,
-    modelName: 'User',
+    modelName: 'Friend',
     timestamps: true,
     paranoid: true,
-    tableName: 'Users',
+    tableName: 'Friends',
   });
-  return User;
+  return Friend;
 };
