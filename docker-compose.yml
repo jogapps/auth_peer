@@ -7,21 +7,23 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 3000:3000
+      - 2181:2181
+      - 9092:9092
     depends_on:
-      - redis
-      - elasticsearch 
+      - zookeeper
+      - kafka
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules  # Include this line to mount the node_modules directory
     environment:
       - NODE_ENV=development          
-  redis:
-    image: redis:latest
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+  zookeper:
+    image: zookeper:latest
+  kafka:
+    image: kafka:latest
     environment:
       - discovery.type=single-node
     volumes:
-      - esdata:/usr/share/elasticsearch/data    
+      - esdata:/usr/share/kafka/data
 volumes:
   esdata:

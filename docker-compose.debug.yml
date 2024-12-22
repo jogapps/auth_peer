@@ -1,7 +1,7 @@
 version: '3.4'
 
 services:
-  costprice:
+  auth-peer:
     image: auth-peer
     build:
       context: .
@@ -10,21 +10,22 @@ services:
       NODE_ENV: development
     ports:
       - 3000:3000
-      - 9229:9229
+      - 2181:2181
+      - 9092:9092
     depends_on:
-      - redis
-      - elasticsearch 
+      - zookeeper
+      - kafka
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules # Remove this if you have pure JS dependencies            
     command: ["node", "--inspect=0.0.0.0:9229", "app.js"]
-  redis:
-    image: redis:latest
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+  zookeper:
+    image: zookeper:latest
+  kafka:
+    image: kafka:latest
     environment:
       - discovery.type=single-node
     volumes:
-      - esdata:/usr/share/elasticsearch/data    
+      - esdata:/usr/share/kafka/data
 volumes:
   esdata:    
