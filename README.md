@@ -1,7 +1,5 @@
 # Authentication | Relationship | Account Mangement
 
-A GraphQL-based package management system that supports user authentication, role-based access, and CRUD operations for packages.
-
 
 ## Features
 
